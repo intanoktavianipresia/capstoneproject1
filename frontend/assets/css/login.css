@@ -1,0 +1,249 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+#risk-popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 90px;
+  backdrop-filter: blur(4px);
+  z-index: 99999;
+}
+
+/* ANIMASI SLIDE DOWN */
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* KARTU POPUP */
+#risk-popup {
+  background: #1c1c1c;
+  width: 350px;
+  color: #fff;
+  padding: 25px;
+  border-radius: 14px;
+  text-align: center;
+  animation: slideDown 0.35s ease-out;
+  box-shadow: 0 0 32px rgba(0, 0, 0, 0.55);
+}
+
+#risk-popup h3 {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.risk-icon {
+  font-size: 55px;
+  margin-bottom: 12px;
+}
+
+#timer {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #ff5252;
+  font-weight: bold;
+}
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  max-width: 450px;
+  width: 100%;
+  animation: slideDown 0.5s ease-out;
+}
+
+.header {
+  background: linear-gradient(to right, #d3d3d3 20%, #e8e8e8 80%);
+  padding: 5px 5px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.header-title {
+  color: #333;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  font-family: "Anton", sans-serif;
+}
+
+.building-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.form-container {
+  padding: 30px;
+}
+
+.input-group-custom {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-control-custom {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control-custom:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #6b7280;
+  cursor: default;
+}
+
+.toggle-password {
+  cursor: pointer;
+}
+
+.toggle-password:hover {
+  color: #3b82f6;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #fee;
+  border-left: 3px solid #dc3545;
+  border-radius: 4px;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.btn-login:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.alert-custom {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-danger {
+  background: #fee;
+  color: #dc3545;
+  border-left: 3px solid #dc3545;
+}
+
+.alert-warning {
+  background: #fffbeb;
+  color: #f59e0b;
+  border-left: 3px solid #f59e0b;
+}
+
+.alert-success {
+  background: #ecfdf5;
+  color: #059669;
+  border-left: 3px solid #059669;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 15px;
+}
+
+.modal-header {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.footer {
+  background: rgba(100, 116, 139, 0.8);
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  width: 100%;
+  border-radius: 0px;
+  font-weight: bold;
+}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Mahasiswa - Portal Akademik</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/dm.css" />
+  </head>
+  <body>
+    <div class="top-header">
+      <h2 class="fw-bold">Portal Akademik</h2>
+      <p>Universitas Bengkulu</p>
+    </div>
+
+    <div class="container mt-4">
+      <!-- ✅ BARU: Warning Container untuk Monitoring/Suspended -->
+      <div class="row">
+        <div class="col-12">
+          <div id="warningContainer"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 order-md-3">
+          <div class="box right-box text-center">
+            <h6 class="fw-bold mb-3">Informasi Pengguna</h6>
+
+            <div class="mb-2">
+              <i
+                class="bi bi-person-circle"
+                style="font-size: 80px; color: #111"
+              ></i>
+            </div>
+
+            <div class="fw-bold" id="userName">Nama User</div>
+            <div class="text-muted" id="userNim">NIM</div>
+
+            <button class="btn btn-danger btn-sm mt-2" onclick="logout()">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+
+            <hr />
+
+            <h6 class="fw-bold">Academics</h6>
+            <ul class="list-unstyled">
+              <li>
+                <a class="menu-link" href="#" onclick="openProfile()">
+                  <i class="bi bi-person"></i> Profil
+                </a>
+              </li>
+              <li>
+                <a class="menu-link" href="#" onclick="openResetPassword()">
+                  <i class="bi bi-key"></i> Ubah Password
+                </a>
+              </li>
+              <li><span class="text-muted">Menu lain nonaktif</span></li>
+            </ul>
+
+            <hr />
+
+            <h6 class="fw-bold">Virtual Class</h6>
+            <p class="text-muted">Menu lain nonaktif</p>
+          </div>
+        </div>
+
+        <!-- PENGUMUMAN -->
+        <div class="col-md-5 order-md-1">
+          <div class="box">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-megaphone"></i> Pengumuman
+            </h6>
+
+            <p>
+              <b>Kategori : Seputar Registrasi</b><br />
+              <span class="text-muted"
+                >• Belum ada informasi untuk kategori ini</span
+              >
+            </p>
+
+            <p>
+              <b>Kategori : Kegiatan Mahasiswa</b><br />
+              <span class="text-muted"
+                >• Belum ada informasi untuk kategori ini</span
+              >
+            </p>
+
+            <p>
+              <b>Kategori : Tata Mahasiswa</b><br />
+              <span class="text-muted"
+                >• Belum ada informasi untuk kategori ini</span
+              >
+            </p>
+          </div>
+
+          <!-- ✅ BARU: Recent Login History -->
+          <div class="box mt-3">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-clock-history"></i> Riwayat Login Terbaru
+            </h6>
+            <div id="recentLoginContainer">
+              <div class="text-center py-3">
+                <div
+                  class="spinner-border spinner-border-sm text-primary"
+                  role="status"
+                >
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DISKUSI TERBARU -->
+        <div class="col-md-4 order-md-2">
+          <div class="box">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-chat-dots"></i> Diskusi Terbaru
+            </h6>
+
+            <div class="p-2 border rounded">
+              <p class="small mb-2">
+                <b>Pertanyaan Mahasiswa:</b><br />
+                "Pak/bu saya mau bertanya tentang KRS, kenapa mata kuliah yang
+                saya ambil tidak muncul?"
+              </p>
+              <p class="text-muted small mb-0">
+                <i class="bi bi-clock"></i> Terakhir update: 02 Agustus 2025
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">© 2025 Sistem Portal Login Deteksi Anomali</div>
+
+    <!-- MODAL PROFIL -->
+    <div class="modal fade" id="profileModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-person-circle"></i> Profil Mahasiswa
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <table class="table table-borderless">
+              <tr>
+                <td width="40%"><b>NIM:</b></td>
+                <td><span id="p_nim"></span></td>
+              </tr>
+              <tr>
+                <td><b>Nama:</b></td>
+                <td><span id="p_nama"></span></td>
+              </tr>
+              <tr>
+                <td><b>Email:</b></td>
+                <td><span id="p_email"></span></td>
+              </tr>
+              <tr>
+                <td><b>Status Akun:</b></td>
+                <td><span id="p_status"></span></td>
+              </tr>
+              <tr>
+                <td><b>Tanggal Daftar:</b></td>
+                <td><span id="p_tanggal"></span></td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL RESET PASSWORD -->
+    <div class="modal fade" id="resetModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form class="modal-content" onsubmit="submitPassword(event)">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-key"></i> Ubah Password</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- PASSWORD LAMA -->
+            <label class="form-label">Password Lama</label>
+            <div class="input-group mb-3">
+              <input
+                type="password"
+                id="old_pass"
+                class="form-control"
+                placeholder="Masukkan password lama"
+                required
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                onclick="togglePasswordVisibility('old_pass')"
+              >
+                <i class="bi bi-eye-slash" id="icon_old_pass"></i>
+              </button>
+            </div>
+
+            <!-- PASSWORD BARU -->
+            <label class="form-label">Password Baru</label>
+            <div class="input-group mb-3">
+              <input
+                type="password"
+                id="new_pass"
+                class="form-control"
+                placeholder="Masukkan password baru"
+                required
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                onclick="togglePasswordVisibility('new_pass')"
+              >
+                <i class="bi bi-eye-slash" id="icon_new_pass"></i>
+              </button>
+            </div>
+
+            <!-- KONFIRMASI PASSWORD BARU -->
+            <label class="form-label">Konfirmasi Password Baru</label>
+            <div class="input-group mb-3">
+              <input
+                type="password"
+                id="conf_pass"
+                class="form-control"
+                placeholder="Ulangi password baru"
+                required
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                onclick="togglePasswordVisibility('conf_pass')"
+              >
+                <i class="bi bi-eye-slash" id="icon_conf_pass"></i>
+              </button>
+            </div>
+
+            <!-- INFO PASSWORD STRENGTH -->
+            <div class="alert alert-info py-2" role="alert">
+              <small>
+                <i class="bi bi-info-circle"></i>
+                Password minimal 8 karakter, mengandung huruf dan angka
+              </small>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-check-circle"></i> Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/js/dm.js"></script>
+  </body>
+</html>

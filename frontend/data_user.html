@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Mahasiswa - Portal Akademik</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <link rel="stylesheet" href="/frontend/assets/css/style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="d-flex align-items-center gap-3">
+        <img src="./assets/img/logo-unib.jpeg" alt="Logo" class="logo" />
+        <div>
+          <h6 class="mb-0 fw-bold text-primary">PORTAL AKADEMIK</h6>
+          <small class="text-muted">Universitas Bengkulu</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar expanded" id="sidebar">
+      <div class="profile">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          alt="Admin"
+        />
+        <h6 id="adminName">Admin Portal</h6>
+        <div class="status"><i class="bi bi-circle-fill"></i> Online</div>
+      </div>
+      <a href="dashboard_admin.html"> <i class="bi bi-house-door"></i> Home </a>
+      <a href="data_user.html" class="active">
+        <i class="bi bi-people"></i> Data Mahasiswa
+      </a>
+      <a href="deteksi_anomali.html">
+        <i class="bi bi-shield-exclamation"></i> Deteksi Anomali
+      </a>
+      <a href="riwayat_login.html">
+        <i class="bi bi-clock-history"></i> Riwayat Login
+      </a>
+      <div
+        style="margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1)"
+      ></div>
+      <a href="#" onclick="handleLogout()">
+        <i class="bi bi-box-arrow-right"></i> Log Out
+      </a>
+    </div>
+
+    <div class="main-container" id="mainContainer">
+      <div class="banner">
+        <img src="./assets/img/gedung-unib.jpeg" alt="Gedung Kampus" />
+      </div>
+
+      <div class="content">
+        <h5 class="fw-bold mb-3">
+          <i class="bi bi-people"></i> Kelola Data Mahasiswa
+        </h5>
+
+        <div class="filter-box shadow-sm mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-2 align-items-center">
+              <button class="btn btn-primary btn-sm" onclick="showAddModal()">
+                <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
+              </button>
+              <button class="btn btn-success btn-sm" onclick="loadMahasiswa()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+              </button>
+            </div>
+
+            <div class="d-flex gap-2 align-items-center">
+              <select
+                class="form-select form-select-sm"
+                id="filterStatus"
+                style="width: 140px"
+                onchange="handleSearch()"
+              >
+                <option value="all">Semua Status</option>
+                <option value="aktif">Aktif</option>
+                <option value="ditunda">Ditunda</option>
+                <option value="diblokir">Diblokir</option>
+              </select>
+
+              <select
+                class="form-select form-select-sm"
+                id="filterPantauan"
+                style="width: 160px"
+                onchange="handleSearch()"
+              >
+                <option value="all">Status Pantauan</option>
+                <option value="1">Dipantau</option>
+                <option value="0">Tidak Dipantau</option>
+              </select>
+
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control form-control-sm"
+                placeholder="Cari NIM atau Nama..."
+                onkeyup="if(event.key === 'Enter') handleSearch()"
+                style="width: 250px"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table-custom table-hover table-striped mb-0">
+                <thead>
+                  <tr>
+                    <th style="width: 5%">No</th>
+                    <th style="width: 10%">NIM</th>
+                    <th style="width: 20%">Nama</th>
+                    <th style="width: 15%">Email</th>
+                    <th style="width: 12%">Status Akun</th>
+                    <th style="width: 10%">Total Login</th>
+                    <th style="width: 15%">Login Terakhir</th>
+                    <th style="width: 13%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="mahasiswaTable">
+                  <tr>
+                    <td colspan="8" class="text-center py-5">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="pagination-box shadow-sm">
+          <div>
+            <small class="text-muted">
+              Total: <span id="totalData">0</span> mahasiswa | Menampilkan 10
+              data per halaman
+            </small>
+          </div>
+          <nav>
+            <ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+          </nav>
+        </div>
+      </div>
+
+      <footer>© 2025 Portal Akademik - Sistem Deteksi Anomali Login</footer>
+    </div>
+
+    <div class="modal fade" id="mahasiswaModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Tambah Mahasiswa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="mahasiswaForm">
+              <input type="hidden" id="editMode" value="false" />
+
+              <div id="manualInputFields">
+                <div class="mb-3">
+                  <label for="nim" class="form-label">NIM *</label>
+                  <input type="text" class="form-control" id="nim" required />
+                </div>
+
+                <div class="mb-3">
+                  <label for="nama" class="form-label">Nama Lengkap *</label>
+                  <input type="text" class="form-control" id="nama" required />
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email *</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3" id="passwordField">
+                  <label for="password" class="form-label">Password *</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    required
+                  />
+                  <small class="text-muted">Min. 8 karakter</small>
+                </div>
+              </div>
+
+              <hr class="my-3" />
+
+              <div class="mb-3" id="csvFileContainer">
+                <label for="csvFile" class="form-label"
+                  >Atau Impor Massal (.csv)</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="csvFile"
+                  accept=".csv"
+                />
+                <small class="text-muted"
+                  >Format: nim,nama,email,password (tanpa header)</small
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="saveMahasiswa()"
+            >
+              Simpan/Impor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="profileDetailModal"
+      tabindex="-1"
+      aria-labelledby="profileDetailLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="profileDetailLabel">
+              Detail Profil & Keamanan:
+              <span class="text-primary" id="detailNamaProfile"></span> (<span
+                id="detailNimProfile"
+              ></span
+              >)
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs" id="myProfileTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="data-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#data-tab-pane"
+                  type="button"
+                  role="tab"
+                >
+                  Data Akun & Status
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="log-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#log-tab-pane"
+                  type="button"
+                  role="tab"
+                >
+                  5 Log Terakhir
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="history-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#history-tab-pane"
+                  type="button"
+                  role="tab"
+                >
+                  Riwayat Keamanan
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content pt-3" id="myProfileTabContent">
+              <div
+                class="tab-pane fade show active"
+                id="data-tab-pane"
+                role="tabpanel"
+                tabindex="0"
+              >
+                <h6 class="fw-bold">Informasi Dasar</h6>
+                <div class="row mb-3">
+                  <div class="col-md-6">NIM: <strong id="p_nim"></strong></div>
+                  <div class="col-md-6">
+                    Email: <strong id="p_email"></strong>
+                  </div>
+                  <div class="col-md-6">
+                    Nama: <strong id="p_nama"></strong>
+                  </div>
+                  <div class="col-md-6">
+                    Tanggal Daftar: <strong id="p_daftar"></strong>
+                  </div>
+                </div>
+
+                <h6 class="fw-bold mt-4">Status Keamanan</h6>
+                <p>Status Akun: <strong id="p_status_akun"></strong></p>
+                <p>
+                  Status Pantauan:
+                  <strong id="p_dalam_pantauan"></strong> (Sejak:
+                  <span id="p_pantauan_mulai"></span>)
+                </p>
+
+                <h6 class="fw-bold mt-4">
+                  Statistik Keamanan (Diambil dari database)
+                </h6>
+                <div class="row">
+                  <div class="col-md-3">
+                    Total Login Berhasil: <strong id="p_berhasil"></strong>
+                  </div>
+                  <div class="col-md-3">
+                    Login Gagal: <strong id="p_gagal"></strong>
+                  </div>
+                  <div class="col-md-3">
+                    Deteksi Kritis: <strong id="p_kritis"></strong>
+                  </div>
+                </div>
+
+                <h6 class="fw-bold mt-4">
+                  Deteksi Anomali Berdasarkan Risiko (Total:
+                  <span id="statsTotalDeteksi"></span>)
+                </h6>
+                <div id="statsRiskChart">
+                  Rendah: <strong id="statsRiskRendah"></strong> | Sedang:
+                  <strong id="statsRiskSedang"></strong> | Tinggi:
+                  <strong id="statsRiskTinggi"></strong> | Kritis:
+                  <strong id="statsRiskKritis"></strong>
+                </div>
+              </div>
+
+              <div
+                class="tab-pane fade"
+                id="log-tab-pane"
+                role="tabpanel"
+                tabindex="0"
+              >
+                <div class="table-responsive">
+                  <table class="table table-sm table-striped">
+                    <thead>
+                      <tr>
+                        <th>Waktu</th>
+                        <th>IP</th>
+                        <th>Lokasi</th>
+                        <th>Device</th>
+                        <th>Status</th>
+                        <th>Skor</th>
+                        <th>Risiko</th>
+                      </tr>
+                    </thead>
+                    <tbody id="detailLogTable">
+                      <tr>
+                        <td colspan="7" class="text-center">
+                          Memuat data log...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                class="tab-pane fade"
+                id="history-tab-pane"
+                role="tabpanel"
+                tabindex="0"
+              >
+                <div class="table-responsive">
+                  <table class="table table-sm table-striped">
+                    <thead>
+                      <tr>
+                        <th>Waktu</th>
+                        <th>Tipe Event</th>
+                        <th>Trigger Oleh</th>
+                        <th>Alasan</th>
+                      </tr>
+                    </thead>
+                    <tbody id="securityHistoryTable">
+                      <tr>
+                        <td colspan="4" class="text-center">
+                          Memuat riwayat keamanan...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/frontend/assets/js/config.js"></script>
+    <script src="/frontend/assets/js/utils.js"></script>
+    <script src="/frontend/assets/js/data_user.js"></script>
+  </body>
+</html>
